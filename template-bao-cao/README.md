@@ -1,8 +1,8 @@
 **TEMPLATE BÁO CÁO ĐỒ ÁN CUỐI KỲ**
 
-**Xây dựng Transformer cho bài toán**
+**Xây dựng Transformer cho bài toán phân loại cảm xúc văn bản**
 
-**phân loại cảm xúc văn bản**
+
 
 _Môn học: Seminar chuyên đề_
 
