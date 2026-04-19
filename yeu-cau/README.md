@@ -1,7 +1,8 @@
 # ĐỒ ÁN CUỐI KỲ 
 
 **Xây dựng Transformer cho bài toán phân loại cảm xúc văn bản**
-Môn học: Seminar chuyên đề
+
+_Môn học: Seminar chuyên đề_
 
 ---
 
