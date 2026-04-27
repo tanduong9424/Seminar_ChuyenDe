@@ -4,6 +4,8 @@
 ## 1.1. Quy trình thực hiện
 Quy trình được thực hiện theo thứ tự sau: data_utils.py → model.py → train.py → visualize.py
 
+**Bảng 1. Quy trình thực nghiệm**
+
 | Thứ tự | File | Lệnh chạy | Nội dung thực hiện |
 | --- | --- | --- | --- |
 | 1 | `data_utils.py` | `python data_utils.py --max_len 20 --show_stats` | Đọc dữ liệu gốc từ `data/sentiment_raw.csv`, tiền xử lý văn bản, xây dựng từ điển từ tập train, và lưu dữ liệu tensor vào `data/processed/`. |
@@ -17,29 +19,29 @@ Kết quả tiền xử lý bao gồm các tệp `data/processed/train.pt`, `val
 ## 1.2. Các siêu tham số chính
 Các siêu tham số chính của thí nghiệm được chia thành hai nhóm: nhóm giá trị cố định trong toàn bộ quá trình chạy và nhóm giá trị được khảo sát theo nhiều cấu hình.
 
-**Nhóm giá trị cố định**
 
-| Siêu tham số | Giá trị | Vai trò |
+**Bảng 2. Nhóm siêu tham số cố định**
+
+| Siêu tham số | Giá trị |
+| --- | --- |
+| `max_len` | 20 |
+| `batch_size` | 32 |
+| `learning rate` | 1e-3 |
+| `num_epochs` | 20 |
+
+
+**Bảng 3. Các cấu hình mô hình được thử nghiệm**
+
+| Cấu hình | `d_model` | `d_ff` |
 | --- | --- | --- |
-| `max_len` | 20 | Độ dài tối đa của câu sau khi cắt/padding |
-| `batch_size` | 32 | Số mẫu trong mỗi mini-batch |
-| `learning rate` | 1e-3 | Tốc độ cập nhật tham số của optimizer |
-| `num_epochs` | 20 | Số vòng lặp huấn luyện toàn bộ tập train |
-
-**Nhóm giá trị được thử nghiệm trong project**
-
-| Cấu hình | `d_model` | `d_ff` | Ghi chú |
-| --- | --- | --- | --- |
-| Transformer #1 | 64 | 128 | Cấu hình trung bình, dùng làm mốc chính |
-| Transformer #2 | 128 | 256 | Mô hình lớn hơn, năng lực biểu diễn mạnh hơn |
-| Transformer #3 | 32 | 64 | Mô hình nhỏ hơn, kiểm tra khả năng nén tham số |
-| Baseline MLP | 64 | - | MLP do giảng viên cung cấp để đối sánh |
+| Transformer #1 | 64 | 128 |
+| Transformer #2 | 128 | 256 |
+| Transformer #3 | 32 | 64 |
+| Baseline MLP | 64 | - |
 
 
 
 Baseline bắt buộc của đồ án là mô hình **MLP do giảng viên cung cấp**; mô hình này được cài sẵn trong `train.py` và dùng làm mốc so sánh với các cấu hình Transformer.
-
-**[Chèn Bảng 1: bảng siêu tham số và mô tả chi tiết]**
 
 ## 1.3. Đảm bảo khả năng tái lập kết quả
 
@@ -51,13 +53,9 @@ Baseline bắt buộc của đồ án là mô hình **MLP do giảng viên cung 
 
 Nhờ đó, khi chạy lại cùng dữ liệu và cùng cấu hình, các chỉ số huấn luyện/đánh giá có thể được đối chiếu trực tiếp.
 
-## 1.4. Ghi chú nội dung sẽ bổ sung vào báo cáo
-
-**[Chèn Bảng 2: so sánh baseline MLP và các cấu hình Transformer]**
-
-**[Chèn Hình 2: learning curve của mô hình tốt nhất]**
-
-**[Chèn Hình 3-5: các heatmap attention cho ví dụ đúng, sai và có phủ định]**
-
-**[Chèn Bảng 3: các câu dự đoán sai để làm error analysis]**
-
+# 2. Kết quả thực nghiệm và so sánh
+...
+# 3. Phân tích Attention
+...
+# 4. Error Analysis
+...
