@@ -44,7 +44,32 @@ Baseline bắt buộc của đồ án là mô hình **MLP do giảng viên cung 
 - Cố định môi trường thư viện theo `requirements.txt`.
 
 # 2. Kết quả thực nghiệm và so sánh
-...
+
+## 2.1. Kết quả các mô hình
+**Bảng 4. Kết quả các mô hình**
+| Mô hình | d_model | d_ff | Train Acc | Val Acc | Test Acc | Train Loss cuối |
+| --- | --- | --- | --- | --- | --- | --- |
+| Baseline MLP | - | - | 0.8762 | 0.7667 | 0.8111 | 0.5321 |
+| Transformer #1 | 64 | 128 | 0.9905 | 0.9556 | 0.9778 | 0.0390 |
+| Transformer #2 | 128 | 256 | 0.9976 | 0.9667 | 0.9778 | 0.0091 |
+| Transformer #3 | 32 | 64 | 0.9167 | 0.8889 | 0.8444 | 0.1915 |
+
+## 2.2. So sánh và lựa chọn mô hình tốt nhất
+Từ bảng trên có thể thấy baseline MLP cho kết quả thấp nhất trên cả ba tập dữ liệu và train loss cuối. Cả ba cấu hình Transformer đều đạt kết quả tốt hơn rõ rệt (đặc biệt là Transformer #1 và Transformer #2), qua đó xác nhận hiệu quả của kiến trúc self-attention trong bài toán phân loại cảm xúc văn bản.
+
+Mặc dù test accuracy của Transformer #1 và Transformer #2 bằng nhau (0.9778), Transformer #2 được xem là cấu hình tốt nhất khi đạt validation accuracy cao nhất là 0.9667 và train loss cuối cùng thấp nhất là 0.0091.
+
+## 2.3. Learning curve và phân tích overfitting
+Biểu đồ learning curve của cấu hình tốt nhất được thể hiện trong hình bên dưới. Quan sát cho thấy train loss giảm rất nhanh trong các epoch đầu và tiếp tục giảm đều về cuối quá trình huấn luyện. Validation loss cũng giảm theo xu hướng chung, nhưng dao động nhẹ ở một vài epoch giữa chừng. Dấu hiệu overfitting bắt đầu xuất hiện từ khoảng epoch 11–12 khi train loss tiếp tục giảm mạnh trong khi validation loss gần như chững lại và giảm chậm hơn. Tuy vậy, mức chênh lệch giữa train loss và val loss không quá lớn nên hiện tượng quá khớp chỉ ở mức nhẹ, chưa ảnh hưởng nhiều đến chất lượng mô hình cuối cùng.
+
+**Hình 1. Learning curve của Transformer #2 (`d_model = 128`, `d_ff = 256`)**
+
+![Learning curve Transformer #2](../results/learning_curve_Transformer_d128_ff256.png)
+
+## 2.4. Nhận xét tác động của d_model, d_ff
+Kết quả thực nghiệm cho thấy khi tăng `d_model` và `d_ff` từ cấu hình nhỏ (32, 64) lên các cấu hình lớn hơn (64, 128) và (128, 256), độ chính xác trên validation và test được cải thiện rõ rệt. Điều này cho thấy mô hình có đủ dung lượng biểu diễn sẽ học tốt hơn đặc trưng ngữ nghĩa của dữ liệu.
+
+Ngược lại, cấu hình quá nhỏ (Transformer #3) cho kết quả thấp hơn đáng kể trên cả train, val và test, phản ánh hiện tượng underfitting tương đối. Tóm lại, trong các cấu hình đã thử, Transformer #2 là phương án cân bằng tốt nhất giữa khả năng học, khả năng khái quát và độ ổn định khi huấn luyện.
 # 3. Phân tích Attention
 ...
 # 4. Error Analysis
