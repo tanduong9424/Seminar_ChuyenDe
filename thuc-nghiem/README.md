@@ -11,7 +11,7 @@ Quy trình thực hiện: data_utils.py → model.py → train.py → visualize.
 | 1 | `data_utils.py` | `python data_utils.py --max_len 20 --show_stats` | Đọc dữ liệu gốc từ `data/sentiment_raw.csv`, tiền xử lý văn bản, xây dựng từ điển từ tập train, và lưu dữ liệu tensor vào `data/processed/`. |
 | 2 | `model.py` | `python model.py` | Định nghĩa mô hình Transformer tự cài đặt, gồm `scaled_dot_product_attention`, `SelfAttention`, `FeedForwardNetwork`, `TransformerEncoderBlock` và lớp phân loại. |
 | 3 | `train.py` | `python train.py --run_all` | Huấn luyện mô hình bằng Adam, chọn checkpoint tốt nhất theo validation accuracy, và ghi tổng hợp kết quả vào `results/summary.json`. |
-| 4 | `visualize.py` | `python visualize.py` | Nạp mô hình đã huấn luyện, trích xuất attention weights và xuất heatmap để phục vụ phân tích. |
+| 4 | `visualize.py` | `python visualize.py --model results/model_Transformer_d128_ff256.pt --sentence "Sentence to classify" ` | Chọn mô hình đã huấn luyện và câu cần phân loại, xuất heatmap để phục vụ phân tích. |
 
 Kết quả tiền xử lý bao gồm các tệp `data/processed/train.pt`, `val.pt`, `test.pt`, cùng `vocab.json` và `meta.json`, giúp các bước sau sử dụng đúng cùng một cấu hình đầu vào.
 
