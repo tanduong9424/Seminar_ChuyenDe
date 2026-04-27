@@ -2,9 +2,9 @@
 # 1. Thiết lập thực nghiệm
 
 ## 1.1. Quy trình thực hiện
-Quy trình chạy được thực hiện theo thứ tự sau: data_utils.py → model.py → train.py → visualize.py
+Quy trình được thực hiện theo thứ tự sau: data_utils.py → model.py → train.py → visualize.py
 
-| Bước | File | Lệnh chạy | Nội dung thực hiện |
+| Thứ tự | File | Lệnh chạy | Nội dung thực hiện |
 | --- | --- | --- | --- |
 | 1 | `data_utils.py` | `python data_utils.py --max_len 20 --show_stats` | Đọc dữ liệu gốc từ `data/sentiment_raw.csv`, tiền xử lý văn bản, xây dựng từ điển từ tập train, và lưu dữ liệu tensor vào `data/processed/`. |
 | 2 | `model.py` | `python model.py` | Định nghĩa mô hình Transformer tự cài đặt, gồm `scaled_dot_product_attention`, `SelfAttention`, `FeedForwardNetwork`, `TransformerEncoderBlock` và lớp phân loại. |
