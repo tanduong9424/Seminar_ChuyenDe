@@ -82,17 +82,33 @@ Phần này trình bày 3 heatmap attention từ mô hình **Transformer d128_ff
 | the film was pretty wonderful today | Mô hình phân loại sai <br> Câu dự đoán trong bộ Test | Positive | Negative | <img src="../results/attention_heatmap_d128_ff256_sai_test.png" width="180"/> <br> Nhận xét: Heatmap cho thấy mô hình không nhấn đủ vào "wonderful" mà bị phân tán; cụm từ bổ nghĩa "pretty" hoặc các token chức năng có thể làm giảm ảnh hưởng của từ cảm xúc mạnh. |
 | the movie was not bad | Mô hình phân loại sai <br> Câu có phủ định <br> Câu dự đoán ngoài bộ Test (Nhóm thêm ngoài) | Positive | Negative | <img src="../results/attention_heatmap_d128_ff256_sai_not_test.png" width="180"/> <br> Nhận xét: Mô hình tập trung mạnh lên "bad" và ít chú ý tới "not"; điều này giải thích việc mô hình không đảo chiều ý nghĩa khi gặp phủ định, dẫn tới dự đoán sai. |
 
-**Nhận xét chung:** Tổng quan, các heatmap cho thấy mô hình thường chú ý đúng vào các từ chỉ nội dung (ví dụ: "scene", "title") khi câu mang tính mô tả trung tính. Ở các câu cảm xúc, mô hình đôi khi bị phân tán attention (không tập trung đủ vào từ cảm xúc chính như "wonderful") hoặc bỏ qua các từ phủ định ("not"), dẫn tới dự đoán sai. Đây là dấu hiệu mô hình chưa nắm tốt cấu trúc ngữ cảnh phức tạp như phủ định và từ bổ nghĩa (ví dụ "pretty").
+Tổng quan, các heatmap cho thấy mô hình thường chú ý đúng vào các từ chỉ nội dung (ví dụ: "scene", "title") khi câu mang tính mô tả trung tính. Ở các câu cảm xúc, mô hình đôi khi bị phân tán attention (không tập trung đủ vào từ cảm xúc chính như "wonderful") hoặc bỏ qua các từ phủ định ("not"), dẫn tới dự đoán sai. Đây là dấu hiệu mô hình chưa nắm tốt cấu trúc ngữ cảnh phức tạp như phủ định và từ bổ nghĩa (ví dụ "pretty").
 
 
 
 
 # 4. Error Analysis
+## 4.1. Phân tích lỗi
+Dưới đây liệt kê 5 câu mà mô hình Transformer d128_ff256 phân loại sai. Mỗi câu sẽ được ghi rõ là câu nào trong bộ Test và câu nào là câu ngoài bộ Test (do nhóm tự tạo thêm). 
+| STT | Câu văn | Nhãn đúng | Nhãn dự đoán | Nhóm lỗi / Giải thích ngắn |
+|---:|---|---:|---:|---|
+| 1 | the film was pretty wonderful today <br> (Câu trong bộ Test) | Positive | Negative | Nhóm từ bổ nghĩa ("pretty"): tín hiệu tích cực nằm ở "wonderful" nhưng mô hình có xu hướng bị nhiễu/phân tán bởi từ bổ nghĩa và các token chức năng, dẫn tới không nhấn đúng từ cảm xúc chính. |
+| 2 | that scene was wonderful lately <br> (Câu trong bộ Test) | Positive | Negative | Nhóm attention lệch trọng tâm: nhiều token tập trung mạnh vào "was" và "lately" hơn là "wonderful" (từ mang cảm xúc chính), nên tín hiệu tích cực không chi phối được quyết định cuối và mô hình dự đoán sai. |
+| 3 | the movie was not bad <br> (Câu ngoài bộ Test) | Positive | Negative | Nhóm phủ định: mô hình chưa học tốt quy tắc đảo nghĩa "not + (negative)", thường chú ý mạnh vào từ cảm xúc "bad" và gán trọng số thấp cho "not", nên không đảo chiều được sentiment. |
+| 4 | the film was horrible <br> (Câu ngoài bộ Test) | Negative | Positive | Nhóm từ lạ/OOV: từ "horrible" không xuất hiện trong train nên bị mã hoá thành [UNK], làm mất tín hiệu tiêu cực và mô hình dễ dự đoán theo xu hướng sai (ví dụ nghiêng về Positive). |
+| 5 | the plot is boring but the acting is great <br> (Câu ngoài bộ Test) | Neutral | Positive | Nhóm câu trộn cảm xúc + tương phản ("but"): câu có cả tín hiệu Negative ("boring") và Positive ("great"). Mô hình có thể thiên về cụm cảm xúc sau "but" hoặc từ tích cực mạnh, nên dự đoán Positive thay vì Neutral. |
 
-Bắt buộc liệt kê 5–10 câu mô hình phân loại sai. Ở đây ưu tiên lấy câu từ `test` (khách quan), bổ sung thêm lỗi từ các mô hình khác khi model tốt nhất có ít lỗi, và có thể thêm 1–2 câu ngoài (out-of-sample) để kiểm tra phủ định.
+Các lỗi phân loại chủ yếu đến từ:
+- Xử lý ngữ cảnh phức tạp như từ bổ nghĩa và phủ định.
+- Câu trộn cảm xúc có quan hệ tương phản ("but") khiến mô hình thiên lệch về một vế.
+- Từ lạ/OOV làm mất tín hiệu cảm xúc khi bị mã hoá thành [UNK]. Nhìn chung, khi tín hiệu cảm xúc chính bị suy giảm (do nhiễu ngữ cảnh hoặc OOV), mô hình dễ dự đoán theo thiên hướng hoặc theo token cảm xúc nổi bật nhất.
 
-| STT | Câu văn | Nhãn đúng | Nhãn dự đoán | Mô hình / Nguồn | Nhóm lỗi / Giải thích ngắn |
-|---:|---|---:|---:|---|---|
+## 4.2. Đề xuất cải thiện
+Dựa trên phân tích lỗi, có thể cải thiện bằng cách tăng cường bộ dữ liệu huấn luyện với các câu có cấu trúc phức tạp hơn, đặc biệt là các câu chứa phủ định và câu trộn lẫn 2 loại cảm xúc. Cụ thể:
+- Thêm nhiều câu chứa cấu trúc phủ định (ví dụ "not good", "not bad") vào tập huấn luyện để mô hình học được quy tắc đảo nghĩa, giúp cải thiện khả năng xử lý các câu có phủ định.
+- Tăng cường dữ liệu với các câu có quan hệ tương phản (ví dụ "the movie is boring but the acting is great") để mô hình học cách cân bằng tín hiệu cảm xúc từ hai vế, thay vì thiên lệch về một vế.
+- Thêm nhiều từ cảm xúc phổ biến vào từ điển (vocab) để giảm thiểu tình trạng OOV, giúp mô hình nắm bắt tốt hơn các tín hiệu cảm xúc trong câu.
+
 
 
 
