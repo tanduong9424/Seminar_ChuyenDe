@@ -71,6 +71,29 @@ Kết quả thực nghiệm cho thấy khi tăng `d_model` và `d_ff` từ cấu
 
 Ngược lại, cấu hình quá nhỏ (Transformer #3) cho kết quả thấp hơn đáng kể trên cả train, val và test, phản ánh hiện tượng underfitting tương đối. Tóm lại, trong các cấu hình đã thử, Transformer #2 là phương án cân bằng tốt nhất giữa khả năng học, khả năng khái quát và độ ổn định khi huấn luyện.
 # 3. Phân tích Attention
-...
+
+**Bảng 1 — Heatmap Attention (ví dụ 3 câu minh họa)**
+
+Phần này trình bày 3 heatmap attention từ mô hình **Transformer d128_ff256** (mô hình tốt nhất đã lựa chọn ở trên) tương ứng với ba câu minh họa (1 câu dự đoán đúng trên tập Test, 1 câu dự đoán sai trên tập Test, 1 câu phủ định do nhóm thêm). Mỗi hàng gồm câu đầu vào, nguồn, nhãn thật, nhãn dự đoán và 2–3 câu nhận xét rút gọn.
+
+| Câu | Loại câu | Nhãn thật | Nhãn dự đoán | Heatmap và Nhận xét |
+|---|---|---|---|---|
+| this scene has a simple title | Mô hình phân loại đúng <br> Câu dự đoán trong bộ Test | Neutral | Neutral | <img src="../results/attention_heatmap_d128_ff256_dung_test.png" width="180"/> <br> Nhận xét: Attention tập trung vào các từ chỉ nội dung "scene" và "title", ít chú ý từ cảm xúc; vì vậy mô hình phân loại đúng là trung tính. |
+| the film was pretty wonderful today | Mô hình phân loại sai <br> Câu dự đoán trong bộ Test | Positive | Negative | <img src="../results/attention_heatmap_d128_ff256_sai_test.png" width="180"/> <br> Nhận xét: Heatmap cho thấy mô hình không nhấn đủ vào "wonderful" mà bị phân tán; cụm từ bổ nghĩa "pretty" hoặc các token chức năng có thể làm giảm ảnh hưởng của từ cảm xúc mạnh. |
+| the movie was not bad | Mô hình phân loại sai <br> Câu có phủ định <br> Câu dự đoán ngoài bộ Test (Nhóm thêm ngoài) | Positive | Negative | <img src="../results/attention_heatmap_d128_ff256_sai_not_test.png" width="180"/> <br> Nhận xét: Mô hình tập trung mạnh lên "bad" và ít chú ý tới "not"; điều này giải thích việc mô hình không đảo chiều ý nghĩa khi gặp phủ định, dẫn tới dự đoán sai. |
+
+**Nhận xét chung:** Tổng quan, các heatmap cho thấy mô hình thường chú ý đúng vào các từ chỉ nội dung (ví dụ: "scene", "title") khi câu mang tính mô tả trung tính. Ở các câu cảm xúc, mô hình đôi khi bị phân tán attention (không tập trung đủ vào từ cảm xúc chính như "wonderful") hoặc bỏ qua các từ phủ định ("not"), dẫn tới dự đoán sai. Đây là dấu hiệu mô hình chưa nắm tốt cấu trúc ngữ cảnh phức tạp như phủ định và từ bổ nghĩa (ví dụ "pretty").
+
+
+
+
 # 4. Error Analysis
-...
+
+Bắt buộc liệt kê 5–10 câu mô hình phân loại sai. Ở đây ưu tiên lấy câu từ `test` (khách quan), bổ sung thêm lỗi từ các mô hình khác khi model tốt nhất có ít lỗi, và có thể thêm 1–2 câu ngoài (out-of-sample) để kiểm tra phủ định.
+
+| STT | Câu văn | Nhãn đúng | Nhãn dự đoán | Mô hình / Nguồn | Nhóm lỗi / Giải thích ngắn |
+|---:|---|---:|---:|---|---|
+
+
+
+
