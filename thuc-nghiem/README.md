@@ -18,21 +18,21 @@ Kết quả tiền xử lý bao gồm các tệp `data/processed/train.pt`, `val
 
 ## 1.2. Các siêu tham số chính
 **Bảng 2. Nhóm siêu tham số cố định**
-
 | Siêu tham số | Giá trị |
 | --- | --- |
 | `max_len` | 20 |
 | `batch_size` | 32 |
 | `learning rate` | 1e-3 |
 | `num_epochs` | 20 |
-**Bảng 3. Các cấu hình mô hình được thử nghiệm**
 
+**Bảng 3. Các cấu hình mô hình được thử nghiệm**
 | Cấu hình | `d_model` | `d_ff` |
 | --- | --- | --- |
 | Transformer #1 | 64 | 128 |
 | Transformer #2 | 128 | 256 |
 | Transformer #3 | 32 | 64 |
 | Baseline MLP | 64 | - |
+
 Baseline bắt buộc của đồ án là mô hình **MLP do giảng viên cung cấp**, được cài sẵn trong `train.py` và dùng làm mốc so sánh với các cấu hình Transformer.
 
 ## 1.3. Đảm bảo khả năng tái lập kết quả
