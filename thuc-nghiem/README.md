@@ -84,9 +84,6 @@ Phần này trình bày 3 heatmap attention từ mô hình **Transformer d128_ff
 
 Tổng quan, các heatmap cho thấy mô hình thường chú ý đúng vào các từ chỉ nội dung (ví dụ: "scene", "title") khi câu mang tính mô tả trung tính. Ở các câu cảm xúc, mô hình đôi khi bị phân tán attention (không tập trung đủ vào từ cảm xúc chính như "wonderful") hoặc bỏ qua các từ phủ định ("not"), dẫn tới dự đoán sai. Đây là dấu hiệu mô hình chưa nắm tốt cấu trúc ngữ cảnh phức tạp như phủ định và từ bổ nghĩa (ví dụ "pretty").
 
-
-
-
 # 4. Error Analysis
 ## 4.1. Phân tích lỗi
 Dưới đây liệt kê 5 câu mà mô hình Transformer d128_ff256 phân loại sai. Mỗi câu sẽ được ghi rõ là câu nào trong bộ Test và câu nào là câu ngoài bộ Test (do nhóm tự tạo thêm). 
@@ -108,6 +105,15 @@ Dựa trên phân tích lỗi, có thể cải thiện bằng cách tăng cườ
 - Thêm nhiều câu chứa cấu trúc phủ định (ví dụ "not good", "not bad") vào tập huấn luyện để mô hình học được quy tắc đảo nghĩa, giúp cải thiện khả năng xử lý các câu có phủ định.
 - Tăng cường dữ liệu với các câu có quan hệ tương phản (ví dụ "the movie is boring but the acting is great") để mô hình học cách cân bằng tín hiệu cảm xúc từ hai vế, thay vì thiên lệch về một vế.
 - Thêm nhiều từ cảm xúc phổ biến vào từ điển (vocab) để giảm thiểu tình trạng OOV, giúp mô hình nắm bắt tốt hơn các tín hiệu cảm xúc trong câu.
+
+# 5. Kết luận
+
+Trong báo cáo này, nhóm đã xây dựng và huấn luyện mô hình Transformer cho bài toán phân loại cảm xúc văn bản. So với Baseline MLP, các cấu hình Transformer đều cho kết quả vượt trội, trong đó cấu hình Transformer tốt nhất (`d_model` = 128, `d_ff` = 256) đạt độ chính xác lên tới 97.78% trên tập Test. 
+
+Bài học quan trọng nhất rút ra khi tự cài đặt cơ chế Self-Attention là hiểu được cách mô hình tự động gán trọng số cho từng cặp từ trong câu để bắt ngữ cảnh. Quá trình trực quan hóa heatmap cho thấy vai trò của Attention trong việc giúp mô hình tập trung đúng vào các từ khóa mang cảm xúc.
+
+Mặc dù kiến trúc Transformer mạnh mẽ, giới hạn lớn nhất của mô hình trong thực nghiệm này là tập dữ liệu huấn luyện còn quá nhỏ và đơn giản. Vì vốn từ vựng (vocab) hẹp và thiếu các mẫu có cấu trúc phức tạp (phủ định, tương phản), mô hình dễ mắc lỗi OOV hoặc bị nhiễu bởi các từ bổ nghĩa. Điều này cho thấy Transformer cần một tập dữ liệu đủ lớn và đa dạng để thực sự phát huy tối đa sức mạnh và học được các quy luật ngôn ngữ sâu sắc hơn.
+
 
 
 
